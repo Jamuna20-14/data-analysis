@@ -1,0 +1,25 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Sample email data
+data = pd.DataFrame({
+    'Email':['Win money','Meeting tomorrow','Free prize','Project update','Claim reward','Lunch today'],
+    'Label':[1,0,1,0,1,0]  # 1=Spam, 0=Not spam
+})
+
+X = CountVectorizer().fit_transform(data['Email'])
+y = data['Label']
+
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+
+# Train and predict with Naive Bayes
+nb = MultinomialNB().fit(X_train,y_train)
+pred_nb = nb.predict(X_test)
+
+print("Naive Bayes Accuracy:", accuracy_score(y_test,pred_nb))
+print("Confusion Matrix:\n", confusion_matrix(y_test,pred_nb))
